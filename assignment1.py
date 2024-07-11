@@ -411,5 +411,5 @@ if __name__ == "__main__":
     for i, value in enumerate(sorted(case)):
         arr[i] = value
     print(f'Started sorting large array of {array_size} elements')
-        result = sorted_squares(arr)
-        print(f'Finished sorting large array of {array_size} elements')
+    result = sorted_squares(arr)
+    print(f'Finished sorting large array of {array_size} elements')
