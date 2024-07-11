@@ -11,13 +11,81 @@
 # cases and be optimized for performance where applicable.
 
 import random
-from static_array import StaticArray
+
+class StaticArrayException(Exception):
+    """
+    Custom exception for Static Array class.
+    Any changes to this class are forbidden.
+    """
+    pass
+
+class StaticArray:
+    """
+    Implementation of Static Array Data Structure.
+    Implemented methods: get(), set(), length()
+    Any changes to this class are forbidden.
+    Even if you make changes to your StaticArray file and upload to Gradescope
+    along with your assignment, it will have no effect. Gradescope uses its
+    own StaticArray file (a replica of this one) and any extra submission of
+    a StaticArray file is ignored.
+    """
+    def __init__(self, size: int = 10) -> None:
+        """
+        Create array of given size.
+        Initialize all elements with values of None.
+        If requested size is not a positive number,
+        raise StaticArray Exception.
+        """
+        if size < 1:
+            raise StaticArrayException('Array size must be a positive integer')
+        self._size = size
+        self._data = [None] * size
+
+    def __iter__(self):
+        """
+        Disable iterator capability for StaticArray class.
+        """
+        return None
+
+    def __str__(self) -> str:
+        """Override string method to provide more readable output."""
+        return f"STAT_ARR Size: {self._size} {self._data}"
+
+    def get(self, index: int):
+        """
+        Return value from given index position.
+        Invalid index raises StaticArrayException.
+        """
+        if index < 0 or index >= self.length():
+            raise StaticArrayException('Index out of bounds')
+        return self._data[index]
+
+    def set(self, index: int, value) -> None:
+        """
+        Store value at given index in the array.
+        Invalid index raises StaticArrayException.
+        """
+        if index < 0 or index >= self.length():
+            raise StaticArrayException('Index out of bounds')
+        self._data[index] = value
+
+    def __getitem__(self, index: int):
+        """Enable bracketed indexing."""
+        return self.get(index)
+
+    def __setitem__(self, index: int, value: object) -> None:
+        """Enable bracketed indexing."""
+        self.set(index, value)
+
+    def length(self) -> int:
+        """Return length of the array (number of elements)."""
+        return self._size
 
 # ------------------- PROBLEM 1 - MIN_MAX -----------------------------------
 def min_max(arr: StaticArray) -> tuple[int, int]:
     min_val = arr[0]
     max_val = arr[0]
-    for i in range(1, arr.size()):
+    for i in range(1, arr.length()):
         if arr[i] < min_val:
             min_val = arr[i]
         if arr[i] > max_val:
@@ -26,8 +94,8 @@ def min_max(arr: StaticArray) -> tuple[int, int]:
 
 # ------------------- PROBLEM 2 - FIZZ_BUZZ ---------------------------------
 def fizz_buzz(arr: StaticArray) -> StaticArray:
-    result = StaticArray(arr.size())
-    for i in range(arr.size()):
+    result = StaticArray(arr.length())
+    for i in range(arr.length()):
         if arr[i] % 3 == 0 and arr[i] % 5 == 0:
             result[i] = "FizzBuzz"
         elif arr[i] % 3 == 0:
@@ -41,7 +109,7 @@ def fizz_buzz(arr: StaticArray) -> StaticArray:
 # ------------------- PROBLEM 3 - REVERSE -----------------------------------
 def reverse(arr: StaticArray) -> None:
     left = 0
-    right = arr.size() - 1
+    right = arr.length() - 1
     while left < right:
         arr[left], arr[right] = arr[right], arr[left]
         left += 1
@@ -49,7 +117,7 @@ def reverse(arr: StaticArray) -> None:
 
 # ------------------- PROBLEM 4 - ROTATE ------------------------------------
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
-    n = arr.size()
+    n = arr.length()
     result = StaticArray(n)
     steps = steps % n  # handle steps larger than array size
     for i in range(n):
@@ -74,7 +142,7 @@ def sa_range(start: int, end: int) -> StaticArray:
 def is_sorted(arr: StaticArray) -> int:
     ascending = True
     descending = True
-    for i in range(1, arr.size()):
+    for i in range(1, arr.length()):
         if arr[i] < arr[i - 1]:
             ascending = False
         if arr[i] > arr[i - 1]:
@@ -91,7 +159,7 @@ def find_mode(arr: StaticArray) -> tuple[object, int]:
     max_count = 1
     current = arr[0]
     current_count = 1
-    for i in range(1, arr.size()):
+    for i in range(1, arr.length()):
         if arr[i] == current:
             current_count += 1
         else:
@@ -107,12 +175,12 @@ def find_mode(arr: StaticArray) -> tuple[object, int]:
 
 # ------------------- PROBLEM 8 - REMOVE_DUPLICATES -------------------------
 def remove_duplicates(arr: StaticArray) -> StaticArray:
-    if arr.size() == 0:
+    if arr.length() == 0:
         return arr
-    result = StaticArray(arr.size())
+    result = StaticArray(arr.length())
     index = 0
     result[index] = arr[0]
-    for i in range(1, arr.size()):
+    for i in range(1, arr.length()):
         if arr[i] != arr[i - 1]:
             index += 1
             result[index] = arr[i]
@@ -125,16 +193,16 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
 def count_sort(arr: StaticArray) -> StaticArray:
     min_val = arr[0]
     max_val = arr[0]
-    for i in range(1, arr.size()):
+    for i in range(1, arr.length()):
         if arr[i] < min_val:
             min_val = arr[i]
         if arr[i] > max_val:
             max_val = arr[i]
     range_of_values = max_val - min_val + 1
     count_array = [0] * range_of_values
-    for i in range(arr.size()):
+    for i in range(arr.length()):
         count_array[arr[i] - min_val] += 1
-    sorted_arr = StaticArray(arr.size())
+    sorted_arr = StaticArray(arr.length())
     index = 0
     for i in range(range_of_values):
         while count_array[i] > 0:
@@ -145,7 +213,7 @@ def count_sort(arr: StaticArray) -> StaticArray:
 
 # ------------------- PROBLEM 10 - SORTED SQUARES ---------------------------
 def sorted_squares(arr: StaticArray) -> StaticArray:
-    size = arr.size()
+    size = arr.length()
     result = StaticArray(size)
     left = 0
     right = size - 1
