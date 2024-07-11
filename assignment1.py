@@ -97,11 +97,11 @@ def fizz_buzz(arr: StaticArray) -> StaticArray:
     result = StaticArray(arr.length())
     for i in range(arr.length()):
         if arr[i] % 3 == 0 and arr[i] % 5 == 0:
-            result[i] = "FizzBuzz"
+            result[i] = "fizzbuzz"
         elif arr[i] % 3 == 0:
-            result[i] = "Fizz"
+            result[i] = "fizz"
         elif arr[i] % 5 == 0:
-            result[i] = "Buzz"
+            result[i] = "buzz"
         else:
             result[i] = arr[i]
     return result
@@ -199,12 +199,14 @@ def count_sort(arr: StaticArray) -> StaticArray:
         if arr[i] > max_val:
             max_val = arr[i]
     range_of_values = max_val - min_val + 1
-    count_array = [0] * range_of_values
+    count_array = StaticArray(range_of_values)
+    for i in range(count_array.length()):
+        count_array[i] = 0
     for i in range(arr.length()):
         count_array[arr[i] - min_val] += 1
     sorted_arr = StaticArray(arr.length())
     index = 0
-    for i in range(range_of_values):
+    for i in range(count_array.length()):
         while count_array[i] > 0:
             sorted_arr[index] = i + min_val
             index += 1
@@ -409,5 +411,5 @@ if __name__ == "__main__":
     for i, value in enumerate(sorted(case)):
         arr[i] = value
     print(f'Started sorting large array of {array_size} elements')
-    result = sorted_squares(arr)
-    print(f'Finished sorting large array of {array_size} elements')
+        result = sorted_squares(arr)
+        print(f'Finished sorting large array of {array_size} elements')
